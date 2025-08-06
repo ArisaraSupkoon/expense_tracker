@@ -511,9 +511,9 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'สรุป',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            activeIcon: Icon(Icons.settings),
-            label: 'ตั้งค่า',
+            icon: Icon(Icons.person_outlined),
+            activeIcon: Icon(Icons.person),
+            label: 'โปรไฟล์',
           ),
         ],
       ),

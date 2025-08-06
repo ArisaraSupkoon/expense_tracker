@@ -13,7 +13,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ตั้งค่า'),
+        title: const Text('โปรไฟล์'),
         centerTitle: true,
       ),
       body: ListView(
