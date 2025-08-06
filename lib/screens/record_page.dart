@@ -67,7 +67,16 @@ class _RecordPageState extends State<RecordPage> {
 
     if (match != null) {
       final extractedNote = match.group(1)?.trim() ?? '';
-      final extractedAmount = double.tryParse(match.group(2) ?? '');
+      final numberText = match.group(2) ?? '';
+      double? extractedAmount = double.tryParse(numberText);
+
+      // ถ้าแปลงตัวเลขไม่ได้ ลองแปลงคำพูดไทยเป็นตัวเลข
+      if (extractedAmount == null) {
+        final thaiNumber = convertThaiTextToNumber(numberText);
+        if (thaiNumber != null) {
+          extractedAmount = thaiNumber.toDouble();
+        }
+      }
 
       setState(() {
         note = extractedNote;
@@ -76,6 +85,7 @@ class _RecordPageState extends State<RecordPage> {
         amountController.text = extractedAmount?.toString() ?? '';
       });
     } else {
+      // fallback
       setState(() {
         note = text;
         noteController.text = text;
@@ -115,10 +125,10 @@ class _RecordPageState extends State<RecordPage> {
     final categories = isIncome ? incomeCategories : expenseCategories;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF1FFF3),
       appBar: AppBar(
-        leading: BackButton(color: Colors.black),
-        backgroundColor: Colors.white,
+        //leading: BackButton(color: Colors.black),
+        backgroundColor: const Color(0xFF00D09E),
         elevation: 0,
         title: const Text(
           'บันทึกข้อมูล',
@@ -133,7 +143,7 @@ class _RecordPageState extends State<RecordPage> {
           children: [
             Center(
               child: ToggleButtons(
-                isSelected: [isIncome, !isIncome], 
+                isSelected: [isIncome, !isIncome],
                 onPressed: (index) {
                   setState(() {
                     isIncome = index == 0;
@@ -146,11 +156,11 @@ class _RecordPageState extends State<RecordPage> {
                 children: const [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('รายรับ'), 
+                    child: Text('รายรับ'),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('รายจ่าย'), 
+                    child: Text('รายจ่าย'),
                   ),
                 ],
               ),
@@ -287,4 +297,54 @@ class _RecordPageState extends State<RecordPage> {
       ),
     );
   }
+}
+
+int? convertThaiTextToNumber(String input) {
+  final numberWords = {
+    'ศูนย์': 0,
+    'หนึ่ง': 1,
+    'สอง': 2,
+    'สาม': 3,
+    'สี่': 4,
+    'ห้า': 5,
+    'หก': 6,
+    'เจ็ด': 7,
+    'แปด': 8,
+    'เก้า': 9,
+    'สิบ': 10,
+    'ร้อย': 100,
+    'พัน': 1000,
+    'หมื่น': 10000,
+    'แสน': 100000,
+    'ล้าน': 1000000,
+  };
+
+  int result = 0;
+  int temp = 0;
+  int lastUnit = 0;
+
+  final tokens = RegExp(
+    r'[ก-๙]+',
+  ).allMatches(input).map((e) => e.group(0)!).toList();
+
+  for (final word in tokens) {
+    if (numberWords.containsKey(word)) {
+      final value = numberWords[word]!;
+      if (value >= 10) {
+        if (temp == 0) temp = 1;
+        temp *= value;
+        lastUnit = value;
+      } else {
+        temp += value;
+      }
+    } else {
+      if (temp != 0) {
+        result += temp;
+        temp = 0;
+      }
+    }
+  }
+
+  result += temp;
+  return result > 0 ? result : null;
 }

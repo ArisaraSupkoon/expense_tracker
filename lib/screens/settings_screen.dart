@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:expense_tracker/screens/account_screen.dart';
+import 'package:expense_tracker/screens/preferences_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -12,8 +14,13 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF1FFF3),
       appBar: AppBar(
-        title: const Text('โปรไฟล์'),
+        backgroundColor: const Color(0xFF00D09E),
+        title: const Text(
+          'โปรไฟล์',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: ListView(
@@ -26,7 +33,10 @@ class SettingsScreen extends StatelessWidget {
             title: const Text('บัญชีของฉัน'),
             subtitle: const Text('เปลี่ยนชื่อผู้ใช้ / รหัสผ่าน'),
             onTap: () {
-              Navigator.pushNamed(context, '/account');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AccountScreen()),
+              );
             },
           ),
 
@@ -38,7 +48,12 @@ class SettingsScreen extends StatelessWidget {
             title: const Text('ตั้งค่า'),
             subtitle: const Text('แจ้งเตือน / การเข้าสู่ระบบ'),
             onTap: () {
-              Navigator.pushNamed(context, '/preferences');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PreferencesScreen(),
+                ),
+              );
             },
           ),
 

@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_tracker/widgets/arc_progress_bar.dart';
 import 'dart:async';
 
-
 class BudgetScreen extends StatefulWidget {
   const BudgetScreen({super.key});
 
@@ -17,7 +16,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
   Map<String, double> spentAmounts = {}; // ยอดใช้จริงแต่ละหมวด
   bool isLoading = true;
   late StreamSubscription<QuerySnapshot> _subscription;
-
 
   final List<Map<String, dynamic>> categories = [
     {
@@ -45,7 +43,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
     {'icon': Icons.payments, 'category': 'ชำระหนี้', 'color': Colors.indigo},
     {'icon': Icons.category, 'category': 'อื่นๆ', 'color': Colors.grey},
   ];
-
 
   @override
   void initState() {
@@ -81,41 +78,41 @@ class _BudgetScreenState extends State<BudgetScreen> {
     final startOfMonth = DateTime(now.year, now.month, 1);
     final endOfMonth = DateTime(now.year, now.month + 1, 0, 23, 59, 59);
 
-     // Listen realtime records
-  _subscription = FirebaseFirestore.instance
-      .collection('records')
-      .where('userID', isEqualTo: uid)
-      .where('type', isEqualTo: 'expense')
-      .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
-      .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endOfMonth))
-      .snapshots()
-      .listen((snapshot) {
-    spentAmounts.clear();
-    for (var cat in categories) {
-      spentAmounts[cat['category']] = 0.0;
-    }
-    for (var doc in snapshot.docs) {
-      final data = doc.data();
-      final category = data['category'] as String? ?? 'อื่นๆ';
-      final amount = (data['amount'] as num?)?.toDouble() ?? 0;
+    // Listen realtime records
+    _subscription = FirebaseFirestore.instance
+        .collection('records')
+        .where('userID', isEqualTo: uid)
+        .where('type', isEqualTo: 'expense')
+        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
+        .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endOfMonth))
+        .snapshots()
+        .listen((snapshot) {
+          spentAmounts.clear();
+          for (var cat in categories) {
+            spentAmounts[cat['category']] = 0.0;
+          }
+          for (var doc in snapshot.docs) {
+            final data = doc.data();
+            final category = data['category'] as String? ?? 'อื่นๆ';
+            final amount = (data['amount'] as num?)?.toDouble() ?? 0;
 
-      if (spentAmounts.containsKey(category)) {
-        spentAmounts[category] = (spentAmounts[category] ?? 0) + amount;
-      } else {
-        spentAmounts[category] = amount;
-      }
-    }
-    setState(() {
-      isLoading = false;
-    });
-  });
-}
+            if (spentAmounts.containsKey(category)) {
+              spentAmounts[category] = (spentAmounts[category] ?? 0) + amount;
+            } else {
+              spentAmounts[category] = amount;
+            }
+          }
+          setState(() {
+            isLoading = false;
+          });
+        });
+  }
 
-@override
-void dispose() {
-  _subscription.cancel();
-  super.dispose();
-}
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 
   Future<void> _showSetBudgetDialog(String category) async {
     final TextEditingController controller = TextEditingController(
@@ -196,7 +193,15 @@ void dispose() {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('งบประมาณรายจ่าย'), centerTitle: true),
+      backgroundColor: const Color(0xFFF1FFF3),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF00D09E),
+        title: const Text(
+          'งบประมาณรายจ่าย',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -304,7 +309,6 @@ void dispose() {
               ),
             ),
             const SizedBox(height: 12),
-            
           ],
         ),
       ),

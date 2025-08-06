@@ -36,8 +36,41 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    username = 'ทดสอบ'; 
+    username = 'ทดสอบ';
     isLoadingUsername = false;
+
+    // Mock ข้อมูลแทน Firebase
+    totalIncome = 10000.0;
+    totalExpense = 3200.0;
+    budget = 5000.0;
+
+    transactions = [
+      {
+        'category': 'อาหาร/เครื่องดื่ม',
+        'amount': 120.0,
+        'type': 'expense',
+        'date': DateTime.now().subtract(const Duration(days: 1)),
+      },
+      {
+        'category': 'เงินเดือน',
+        'amount': 10000.0,
+        'type': 'income',
+        'date': DateTime.now().subtract(const Duration(days: 2)),
+      },
+      {
+        'category': 'เดินทาง',
+        'amount': 80.0,
+        'type': 'expense',
+        'date': DateTime.now().subtract(const Duration(days: 3)),
+      },
+      {
+        'category': 'สาธารณูปโภค',
+        'amount': 3000.0,
+        'type': 'expense',
+        'date': DateTime.now().subtract(const Duration(days: 4)),
+      },
+    ];
+
     isLoading = false;
     /*
     _loadUsername();

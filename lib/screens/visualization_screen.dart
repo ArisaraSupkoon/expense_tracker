@@ -49,20 +49,27 @@ class _VisualizationScreenState extends State<VisualizationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
+    /*
     final userId = FirebaseAuth.instance.currentUser?.uid;
 
     if (userId == null) {
       return const Scaffold(
-        body: Center(child: Text('กรุณาเข้าสู่ระบบก่อนใช้งาน')),
+        body: Center(child: Text('ไม่มีข้อมูล')),
       );
     }
-    
-    
+    */
     final range = getPeriodRange()['range']!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('สรุปรายรับ-รายจ่าย')),
+      backgroundColor: const Color(0xFFF1FFF3),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF00D09E),
+        title: const Text(
+          'สรุปรายรับ-รายจ่าย',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -72,12 +79,10 @@ class _VisualizationScreenState extends State<VisualizationScreen> {
                 isSelected: [
                   _selectedType == 'income',
                   _selectedType == 'expense',
-                ], 
+                ],
                 onPressed: (index) {
                   setState(() {
-                    _selectedType = index == 0
-                        ? 'income'
-                        : 'expense'; 
+                    _selectedType = index == 0 ? 'income' : 'expense';
                   });
                 },
                 borderRadius: BorderRadius.circular(8),
@@ -86,11 +91,11 @@ class _VisualizationScreenState extends State<VisualizationScreen> {
                 children: const [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('รายรับ'), 
+                    child: Text('รายรับ'),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('รายจ่าย'), 
+                    child: Text('รายจ่าย'),
                   ),
                 ],
               ),
@@ -136,6 +141,85 @@ class _VisualizationScreenState extends State<VisualizationScreen> {
                 ],
               ),
               const SizedBox(height: 20),
+              Expanded(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 250,
+                      child: PieChart(
+                        PieChartData(
+                          sections: [
+                            PieChartSectionData(
+                              value: 40,
+                              title: '40%',
+                              color: Colors.blue,
+                              radius: 80,
+                              titleStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            PieChartSectionData(
+                              value: 30,
+                              title: '30%',
+                              color: Colors.red,
+                              radius: 80,
+                              titleStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            PieChartSectionData(
+                              value: 30,
+                              title: '30%',
+                              color: Colors.green,
+                              radius: 80,
+                              titleStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                          centerSpaceRadius: 50,
+                          sectionsSpace: 2,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'รวมทั้งหมด: 100.00 บาท',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ListTile(
+                            title: Text('อาหาร/เครื่องดื่ม'),
+                            trailing: Text('40.00 บาท (40.0%)'),
+                          ),
+                          ListTile(
+                            title: Text('ช้อปปิ้ง'),
+                            trailing: Text('30.00 บาท (30.0%)'),
+                          ),
+                          ListTile(
+                            title: Text('เดินทาง'),
+                            trailing: Text('30.00 บาท (30.0%)'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              /*
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
@@ -240,6 +324,7 @@ class _VisualizationScreenState extends State<VisualizationScreen> {
                   },
                 ),
               ),
+              */
             ],
           ),
         ),
